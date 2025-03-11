@@ -7,11 +7,12 @@ import { scheduleCampaign } from "@/lib/scheduler";
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Store id in a local variable
-    const campaignId = params.id;
+    // Await the params object before accessing its properties
+    const resolvedParams = await params;
+    const campaignId = resolvedParams.id;
     
     const session = await getServerSession(authOptions);
     
@@ -81,10 +82,12 @@ export async function PUT(
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const campaignId = params.id;
+    // Await the params object before accessing its properties
+    const resolvedParams = await params;
+    const campaignId = resolvedParams.id;
     
     const session = await getServerSession(authOptions);
     
@@ -125,10 +128,12 @@ export async function GET(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const campaignId = params.id;
+    // Await the params object before accessing its properties
+    const resolvedParams = await params;
+    const campaignId = resolvedParams.id;
     
     const session = await getServerSession(authOptions);
     
