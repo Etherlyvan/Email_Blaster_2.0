@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { redirect, notFound } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,6 +14,10 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { EmailPreview } from "@/components/email-preview/EmailPreview";
+import { EnhancedButton } from "@/components/enhanced-button";
+import {  Clock } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // Define the props type correctly
 interface PageProps {
@@ -97,17 +100,28 @@ export default async function CampaignDetailPage({ params }: PageProps) {
         </div>
         <div className="flex space-x-2">
           {(campaign.status === "DRAFT" || campaign.status === "SCHEDULED") && (
-            <Button variant="outline" asChild>
+            <EnhancedButton variant="outline" asChild>
               <Link href={`/campaigns/${campaignId}/edit`}>Edit</Link>
-            </Button>
+            </EnhancedButton>
           )}
           {campaign.status === "DRAFT" && (
-            <Button asChild>
+            <EnhancedButton asChild>
               <Link href={`/campaigns/${campaignId}/send`}>Send</Link>
-            </Button>
+            </EnhancedButton>
           )}
         </div>
       </div>
+
+      {campaign.status === "SCHEDULED" && (
+        <Alert className="bg-blue-50 border-blue-200">
+          <Clock className="h-4 w-4 text-blue-600" />
+          <AlertTitle className="text-blue-800">Campaign Scheduled</AlertTitle>
+          <AlertDescription className="text-blue-700">
+            This campaign is scheduled to run at {format(new Date(campaign.scheduledAt!), "PPp")}.
+            Due to hosting limitations, campaigns can only be scheduled to run once per day.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="grid grid-cols-3 gap-4">
         <Card>
@@ -166,21 +180,12 @@ export default async function CampaignDetailPage({ params }: PageProps) {
           <TabsTrigger value="logs">Delivery Logs</TabsTrigger>
         </TabsList>
         <TabsContent value="preview">
-       
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Email</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-1">
-                <p className="font-medium">{campaign.subject}</p>
-                <p className="text-sm text-muted-foreground">
-                  From: {campaign.senderEmail}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Template: {campaign.template.name}
-                </p>
-              </div>
+            <CardContent className="pt-6">
+              <EmailPreview
+                html={campaign.template.content}
+                subject={campaign.subject}
+              />
             </CardContent>
           </Card>
         </TabsContent>
