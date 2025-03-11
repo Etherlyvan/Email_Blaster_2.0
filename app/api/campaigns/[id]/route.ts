@@ -7,11 +7,11 @@ import { scheduleCampaign } from "@/lib/scheduler";
 
 export async function PUT(
   request: Request,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     // Store id in a local variable
-    const campaignId = context.params.id;
+    const campaignId = params.id;
     
     const session = await getServerSession(authOptions);
     
@@ -78,8 +78,6 @@ export async function PUT(
     );
   }
 }
-
-// Rest of the file remains unchanged
 
 export async function GET(
   request: Request,
