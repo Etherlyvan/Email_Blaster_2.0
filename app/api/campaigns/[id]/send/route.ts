@@ -7,11 +7,12 @@ import { sendCampaignNow } from "@/lib/scheduler";
 
 export async function POST(
   request: Request,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Store id in a local variable to avoid directly accessing params.id
-    const campaignId = context.params.id;
+    // Await the params object before accessing its properties
+    const resolvedParams = await params;
+    const campaignId = resolvedParams.id;
     
     const session = await getServerSession(authOptions);
     
