@@ -10,14 +10,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface PageProps {
-  readonly params: {
-    readonly id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function EditCampaignPage({ params }: PageProps) {
   // Await the params object before accessing its properties
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   const campaignId = resolvedParams.id;
 
   const session = await getServerSession(authOptions);
