@@ -8,9 +8,7 @@ import { format } from "date-fns";
 import { Contact } from "@prisma/client";
 
 interface PageProps {
-  readonly params: {
-    readonly id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 interface GroupWithContacts {
@@ -26,7 +24,7 @@ interface GroupWithContacts {
 
 export default async function GroupDetailPage({ params }: PageProps) {
   // Await the params object before accessing its properties
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   const groupId = resolvedParams.id;
 
   const session = await getServerSession(authOptions);
