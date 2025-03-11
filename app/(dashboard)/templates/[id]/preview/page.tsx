@@ -10,12 +10,14 @@ import { EmailPreview } from "@/components/email-preview/EmailPreview";
 import { ArrowLeft } from "lucide-react";
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function TemplatePreviewPage({ params }: PageProps) {
+  // Await the params object before accessing its properties
+  const resolvedParams = await params;
+  const templateId = resolvedParams.id;
+  
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
@@ -24,7 +26,7 @@ export default async function TemplatePreviewPage({ params }: PageProps) {
 
   const template = await prisma.template.findUnique({
     where: {
-      id: params.id,
+      id: templateId,
     },
   });
 
@@ -37,7 +39,7 @@ export default async function TemplatePreviewPage({ params }: PageProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Button variant="ghost" size="sm" asChild>
-            <Link href={`/templates/${template.id}`} className="flex items-center space-x-1">
+            <Link href={`/templates/${templateId}`} className="flex items-center space-x-1">
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Editor</span>
             </Link>
