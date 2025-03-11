@@ -19,16 +19,14 @@ import { EnhancedButton } from "@/components/enhanced-button";
 import {  Clock } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-// Define the props type correctly
+// Update the PageProps interface
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function CampaignDetailPage({ params }: PageProps) {
   // Await the params object before accessing its properties
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   const campaignId = resolvedParams.id;
 
   const session = await getServerSession(authOptions);
