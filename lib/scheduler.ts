@@ -2,6 +2,30 @@
 import { prisma } from "./db";
 import { sendEmailWithBrevoSMTP } from "./brevo";
 
+// Function to start the scheduler that checks for campaigns to send
+export async function startScheduler(): Promise<NodeJS.Timeout> {
+  return setInterval(async () => {
+    try {
+      // Find campaigns that are scheduled to be sent now
+      const scheduledCampaigns = await prisma.campaign.findMany({
+        where: {
+          status: 'SCHEDULED',
+          scheduledAt: {
+            lte: new Date(),
+          },
+        },
+      });
+
+      // Process each campaign
+      for (const campaign of scheduledCampaigns) {
+        await sendCampaignNow(campaign.id);
+      }
+    } catch (error) {
+      console.error('Error in campaign scheduler:', error);
+    }
+  }, 60000); // Check every minute
+}
+
 // Function to schedule a campaign for later sending
 export async function scheduleCampaign(campaignId: string, scheduledTime: Date): Promise<void> {
   console.log(`Scheduling campaign ${campaignId} for ${scheduledTime.toISOString()}`);
