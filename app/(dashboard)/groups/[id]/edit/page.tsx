@@ -10,14 +10,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 interface PageProps {
-  readonly params: {
-    readonly id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function EditGroupPage({ params }: PageProps) {
   // Await the params object before accessing its properties
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   const groupId = resolvedParams.id;
 
   const session = await getServerSession(authOptions);
