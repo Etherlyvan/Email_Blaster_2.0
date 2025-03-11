@@ -1,26 +1,41 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Add this to the end of your globals.css file */
+
+/* Enhanced button styles */
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200 border-0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.btn-secondary {
+  @apply bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.btn-outline {
+  @apply border-2 border-blue-200 text-blue-700 hover:bg-blue-50 font-medium shadow-sm hover:shadow-md transition-all duration-200;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.btn-destructive {
+  @apply bg-red-600 hover:bg-red-700 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200 border-0;
+}
+
+/* Make buttons more visible with improved focus states */
+button:focus, 
+.button:focus,
+[role="button"]:focus {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+}
+
+/* Improve hover effects for all buttons */
+button:hover,
+.button:hover,
+[role="button"]:hover {
+  transform: translateY(-1px);
+}
+
+/* Add a subtle active effect */
+button:active,
+.button:active,
+[role="button"]:active {
+  transform: translateY(0);
 }

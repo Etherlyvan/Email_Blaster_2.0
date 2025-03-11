@@ -1,0 +1,18 @@
+{
+    "version": 2,
+    "buildCommand": "npm run build",
+    "devCommand": "npm run dev",
+    "outputDirectory": ".next",
+    "framework": "nextjs",
+    "regions": ["sin1"],
+    "crons": [
+      {
+        "path": "/api/worker",
+        "schedule": "*/5 * * * *"
+      }
+    ],
+    "env": {
+      "NEXTAUTH_URL": "https://your-production-url.vercel.app",
+      "VERCEL": "1"
+    }
+  }
